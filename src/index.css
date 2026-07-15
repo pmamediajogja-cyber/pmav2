@@ -1,0 +1,209 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Share+Tech+Mono&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-cyber: 'Orbitron', 'Share Tech Mono', monospace;
+  --font-tech: 'Share Tech Mono', monospace;
+  
+  --color-cyber-bg: #050505;
+  --color-cyber-card: rgba(255, 255, 255, 0.03);
+  --color-cyber-cyan: #00f3ff;
+  --color-cyber-magenta: #ff00e5;
+  --color-cyber-green: #39ff14;
+  --color-cyber-yellow: #fff01f;
+  --color-cyber-blue: #0033ff;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    background-color: #050505;
+    color: #e2e8f0;
+    font-family: var(--font-sans);
+  }
+
+  /* Custom Cyber Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #050505;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-cyber-cyan);
+    box-shadow: 0 0 10px var(--color-cyber-cyan);
+  }
+}
+
+/* Frosted Glass Theme Classes */
+.cyber-bg {
+  background: radial-gradient(circle at 70% 30%, #1a1b3a 0%, #050505 70%), radial-gradient(circle at 20% 80%, #2b102b 0%, #050505 60%);
+}
+
+.grid-pattern {
+  background-image: linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.neon-cyan {
+  color: #00f3ff;
+  text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+}
+
+.neon-magenta {
+  color: #ff00e5;
+  text-shadow: 0 0 10px rgba(255, 0, 229, 0.5);
+}
+
+.neon-border-cyan {
+  border: 1px solid rgba(0, 243, 255, 0.3);
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.1);
+}
+
+.neon-border-magenta {
+  border: 1px solid rgba(255, 0, 229, 0.3);
+  box-shadow: 0 0 15px rgba(255, 0, 229, 0.1);
+}
+
+/* Apply Glass Theme across standard components dynamically */
+.bg-cyber-card,
+.bg-cyber-card\/60,
+.bg-cyber-card\/50,
+.bg-\[\#0e0e1a\],
+.bg-\[\#0e0e1a\]\/80,
+.bg-\[\#0e0e1a\]\/70,
+.bg-\[\#0e0e1a\]\/50,
+.bg-\[\#0a0a14\],
+.bg-\[\#0a0a14\]\/80,
+.bg-\[\#07070c\],
+.bg-\[\#101021\],
+.bg-\[\#0c0c16\],
+.bg-\[\#0f0f1d\] {
+  background: rgba(255, 255, 255, 0.03) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Inner embedded containers (terminals, inputs, logs) */
+.bg-\[\#07070d\],
+.bg-\[\#07070d\]\/90,
+.bg-\[\#050505\],
+.bg-gray-950,
+.bg-black\/40,
+.bg-white\/5,
+input,
+textarea,
+select {
+  background: rgba(0, 0, 0, 0.45) !important;
+  backdrop-filter: blur(6px) !important;
+  -webkit-backdrop-filter: blur(6px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--color-cyber-cyan) !important;
+  box-shadow: 0 0 10px rgba(0, 243, 255, 0.2) !important;
+  outline: none !important;
+}
+
+/* Sections shouldn't cover background gradients completely */
+section {
+  background: transparent !important;
+}
+
+/* Custom Cyberpunk Utilities */
+.neon-glow-cyan {
+  text-shadow: 0 0 10px rgba(0, 243, 255, 0.6), 0 0 20px rgba(0, 243, 255, 0.4);
+}
+
+.neon-glow-magenta {
+  text-shadow: 0 0 10px rgba(255, 0, 229, 0.6), 0 0 20px rgba(255, 0, 229, 0.4);
+}
+
+.neon-glow-green {
+  text-shadow: 0 0 10px rgba(57, 255, 20, 0.6), 0 0 20px rgba(57, 255, 20, 0.4);
+}
+
+.cyber-grid {
+  background-image: 
+    linear-gradient(rgba(0, 243, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 243, 255, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.cyber-grid-magenta {
+  background-image: 
+    linear-gradient(rgba(255, 0, 229, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 0, 229, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* scanline effect */
+.scanline::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  z-index: 20;
+  background-size: 100% 4px, 6px 100%;
+  pointer-events: none;
+}
+
+/* glitch keyframe classes */
+@keyframes glitch {
+  0% {
+    text-shadow: 1px 1px 0 rgba(255,0,229,0.5), -1px -1px 0 rgba(0,243,255,0.5);
+  }
+  25% {
+    text-shadow: -2px 1px 0 rgba(255,0,229,0.5), 1px -2px 0 rgba(0,243,255,0.5);
+  }
+  50% {
+    text-shadow: 1px -1px 0 rgba(255,0,229,0.5), 2px 1px 0 rgba(0,243,255,0.5);
+  }
+  75% {
+    text-shadow: -1px 2px 0 rgba(255,0,229,0.5), -1px -1px 0 rgba(0,243,255,0.5);
+  }
+  100% {
+    text-shadow: 1px 1px 0 rgba(255,0,229,0.5), -1px -1px 0 rgba(0,243,255,0.5);
+  }
+}
+
+.animate-glitch-text {
+  animation: glitch 1.5s infinite linear alternate-reverse;
+}
+
+@keyframes cyber-pulse {
+  0%, 100% {
+    opacity: 0.8;
+    filter: drop-shadow(0 0 2px rgba(0, 243, 255, 0.4));
+  }
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 0 10px rgba(0, 243, 255, 0.8));
+  }
+}
+
+.animate-neon-pulse {
+  animation: cyber-pulse 2s infinite ease-in-out;
+}
