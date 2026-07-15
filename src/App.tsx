@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import Navbar from "./components/Navbar";
 import ParallaxHero from "./components/ParallaxHero";
 import AboutSection from "./components/AboutSection";
@@ -11,23 +11,51 @@ import ParallaxSection from "./components/ParallaxSection";
 
 export default function App() {
   const [soundEnabled, setSoundEnabled] = useState(false);
+  
+  // Referensi untuk menyimpan antrean frame animasi agar tidak menumpuk
+  const requestRef = useRef<number | null>(null);
 
-  // Smooth mouse-move parallax handler to set CSS variables
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      const { clientX, clientY } = e;
-      const xPercent = (clientX / window.innerWidth - 0.5) * 20; // range: -10 to 10px
-      const yPercent = (clientY / window.innerHeight - 0.5) * 20;
-      
-      document.documentElement.style.setProperty("--mouse-x", `${xPercent}px`);
-      document.documentElement.style.setProperty("--mouse-y", `${yPercent}px`);
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
+  // 1. Mencegah Restorasi Scroll & Menstabilkan Layout
+  useLayoutEffect(() => {
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+    // Paksa posisi ke atas sesaat sebelum browser melakukan paint pertama
+    window.scrollTo(0, 0);
   }, []);
 
-  // Pure Web Audio API Synthesizer - 0 byte download, instantaneous loading!
+  // 2. Optimasi Parallax Handler dengan requestAnimationFrame
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      // Jika masih ada kalkulasi frame sebelumnya yang belum selesai, batalkan.
+      // Ini mencegah "Forced reflow" dan penumpukan beban di CPU.
+      if (requestRef.current) {
+        cancelAnimationFrame(requestRef.current);
+      }
+      
+      // Sinkronkan pembaruan variabel CSS dengan siklus render native browser (60fps)
+      requestRef.current = requestAnimationFrame(() => {
+        const { clientX, clientY } = e;
+        const xPercent = (clientX / window.innerWidth - 0.5) * 20; 
+        const yPercent = (clientY / window.innerHeight - 0.5) * 20;
+        
+        document.documentElement.style.setProperty("--mouse-x", `${xPercent}px`);
+        document.documentElement.style.setProperty("--mouse-y", `${yPercent}px`);
+      });
+    };
+
+    // Tambahkan passive: true agar browser tahu event ini tidak akan memblokir scroll
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      if (requestRef.current) {
+        cancelAnimationFrame(requestRef.current);
+      }
+    };
+  }, []);
+
+  // Pure Web Audio API Synthesizer
   const playClickSound = () => {
     if (!soundEnabled) return;
     try {
@@ -36,7 +64,7 @@ export default function App() {
       const gain = audioCtx.createGain();
       
       osc.type = "sine";
-      osc.frequency.setValueAtTime(1400, audioCtx.currentTime); // Crisp futuristic sound note
+      osc.frequency.setValueAtTime(1400, audioCtx.currentTime);
       
       gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.04);
@@ -52,10 +80,12 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen text-slate-200 overflow-x-hidden selection:bg-cyber-cyan selection:text-cyber-bg relative">
-      {/* Frosted Glass Theme Backdrop */}
-      <div className="fixed inset-0 pointer-events-none z-0 cyber-bg transition-transform duration-300 ease-out" />
-      <div className="fixed inset-0 pointer-events-none z-0 grid-pattern transition-transform duration-300 ease-out" />
+    <div className="min-h-screen text-slate-200 overflow-x-hidden selection:bg-cyber-cyan selection:text-cyber-bg relative scroll-smooth">
+      {/* 3. Hardware Acceleration (will-change-transform) 
+        Mendorong elemen statis ini ke memori GPU agar tidak ikut di-reflow saat terjadi interaksi
+      */}
+      <div className="fixed inset-0 pointer-events-none z-0 cyber-bg transition-transform duration-300 ease-out will-change-transform" />
+      <div className="fixed inset-0 pointer-events-none z-0 grid-pattern transition-transform duration-300 ease-out will-change-transform" />
 
       {/* Main App Layout */}
       <div className="relative z-10 flex flex-col min-h-screen justify-between">
@@ -66,46 +96,28 @@ export default function App() {
         />
 
         <main className="flex-1">
-          {/* Section 1: Parallax Hero & Terminal Command Center */}
           <ParallaxSection speed={15} id="home">
-            <ParallaxHero
-              playClick={playClickSound}
-              soundEnabled={soundEnabled}
-            />
+            <ParallaxHero playClick={playClickSound} soundEnabled={soundEnabled} />
           </ParallaxSection>
 
-          {/* Section 2: Personal Profile & Competency Pillars */}
           <ParallaxSection speed={25} id="about">
             <AboutSection playClick={playClickSound} />
           </ParallaxSection>
 
-          {/* Section 3: Professional Chronology Timeline */}
           <ParallaxSection speed={35} id="experience">
             <ExperienceEducation playClick={playClickSound} />
           </ParallaxSection>
 
-          {/* Section 4: Web Cyber Tools Integration */}
           <ParallaxSection speed={25} id="tools">
-            <CyberToolsSection
-              playClick={playClickSound}
-              soundEnabled={soundEnabled}
-            />
+            <CyberToolsSection playClick={playClickSound} soundEnabled={soundEnabled} />
           </ParallaxSection>
 
-          {/* Section 5: Real-time SIEM Log Analyzer & Compliance */}
           <ParallaxSection speed={30} id="siem">
-            <SecurityLogAnalyzer
-              playClick={playClickSound}
-              soundEnabled={soundEnabled}
-            />
+            <SecurityLogAnalyzer playClick={playClickSound} soundEnabled={soundEnabled} />
           </ParallaxSection>
 
-          {/* Section 6: Secured Contact form */}
           <ParallaxSection speed={20} id="contact">
-            <ContactSection
-              playClick={playClickSound}
-              soundEnabled={soundEnabled}
-            />
+            <ContactSection playClick={playClickSound} soundEnabled={soundEnabled} />
           </ParallaxSection>
         </main>
 
